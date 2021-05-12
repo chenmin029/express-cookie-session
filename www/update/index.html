@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<input id="username" type="text" name="username" placeholder="请输入用户名" disabled="disabled"/>
+		</div>
+		<div>
+			<input id="name" type="text" name="name" placeholder="请输入姓名" />
+		</div>	
+		<div>
+			<input id="password" type="text" name="password" placeholder="请输入原始密码" />
+		</div>	
+		<div>
+			<input id="newpassword" type="text" name="password" placeholder="请输入新密码" />
+		</div>	
+		<div>
+			<input id="newconfirmpassword" type="text" name="password" placeholder="请输入新密码确认" />
+		</div>	
+		<div>
+			<button id="updateUser">修改</button>
+		</div>
+	</body>
+</html>
+<script src="../js/jquery3.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	
+	$(function(){
+		let userName = getUrlParam("username");
+		alert(userName);
+		//获取url中的参数
+		 function getUrlParam(name) {
+		  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+		  var r = window.location.search.substr(1).match(reg); //匹配目标参数
+		  if (r != null) return unescape(r[2]); return null; //返回参数值
+		 }
+		 $('#username').val(userName);
+		//查询用户
+		// let finddata={"username":username};
+// 		$.ajax({
+// 			method:'get',
+// 			url:'http://localhost:8088/find',
+// 			data:finddata,
+// 			success:function(res){
+// // 				console.log(res);
+// // 				console.log(res[0].username);
+// // 				console.log(res[0].name);
+// 				$('#username').val(res[0].username);
+// 				$('#name').val(res[0].name);
+// 			},
+// 			error:function(err){
+// 				console.log(err);
+// 			}
+// 		});
+		
+		$('#updateUser').on('click',function(){
+			var username = $('#username').val();
+			var name = $('#name').val();
+			var password= $('#password').val();
+			var newpassword = $('#newpassword').val();
+			var newconfirmpassword = $('#newconfirmpassword').val();
+			if (password == ""){
+				alert('密码不能为空');
+				return;
+			}
+			if (newpassword == ""){
+				alert('新密码不能为空');
+				return;
+			}
+			if (newpassword != newconfirmpassword){
+				alert('新密码没有确认');
+				return;
+			}
+			let data={"username":username,"name":name,password:password,newpassword:newpassword};
+			$.ajax({
+				method:"post",
+				url:'http://localhost:8989/updateuser',
+				data:data,
+				success:function(res){
+					// console.log(res);
+					if (res.Code == 200){
+						location.href = "http://localhost:8989/";
+						// alert(res.msg);
+					} else {
+						alert(res.msg);
+					}
+				},
+				error:function(err){
+					console.log(err);
+				}
+			});
+		})
+		
+	})
+</script>

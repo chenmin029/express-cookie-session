@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<input id="username" type="text" name="username" placeholder="请输入账号" />
+		</div>
+		<div>
+			<input id="name" type="text" name="name" placeholder="请输入姓名" />
+		</div>
+		<div>
+			<input id="password" type="text" name="password" placeholder="请输入密码" />
+		</div>
+		<div>
+			<input id="confirmpassword" type="text" name="confirmpassword" placeholder="请输入密码确认"  />
+		</div>
+		<div>
+			<button id="register">注册</button>
+			<a href="http://localhost:8989/">有账号，请登录</a>
+		</div>
+	</body>
+</html>
+<script src="../js/jquery3.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#register').on('click',function(){
+			var username = $('#username').val();
+			var password = $('#password').val();
+			var confirmpassword = $('#confirmpassword').val();
+			if (username == ""){
+				alert("账号不能为空！");
+				return;
+			}
+			if (username.length<6 || username.length > 14){
+				alert("账号的长度不在6到14之间")
+				return;
+			}
+			var regex=/^\w+$/;
+			let checkFormat = regex.test(username);
+			if (checkFormat == false){
+				alert('用户名只能是数字、字母或者下划线组成');
+				return;
+			}
+			if (password == ""){
+				alert("密码不能为空！");
+				return;
+			}
+			if (password != confirmpassword){
+				alert("您的密码没有确认！");
+				return;
+			}
+			var name = $('#name').val();			
+			var data = {"username": username,"name":name,"password": password};
+			//采用post方法
+			$.ajax({
+				method:'post',
+				url:'http://localhost:8989/adduser',
+				data:data,
+				success:function(res){
+					console.log(res);
+					if (res.insertedCount == 1){
+						location.href = "http://localhost:8989/";
+					}
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		})
+	})
+</script>

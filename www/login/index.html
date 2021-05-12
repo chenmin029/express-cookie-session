@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<input id="username" type="text" name="username" placeholder="请输入用户名"  />
+		</div>
+		<div>
+			<input id="password" type="text" name="password" placeholder="请输入密码"  />
+		</div>
+		<div>
+			<button id="login">登录</button>
+			<!-- <button id="logout">退出登录</button> -->
+			<!-- <button id="upddoc">修改用户</button> -->
+			<!-- <button id="removeuser">注销账户</button> -->
+			<a href="http://localhost:8989/register">您还没有账号，请注册</a>
+		</div>
+	</body>
+</html>
+<script src="../js/jquery3.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(function(){
+		//先判断登录是否有效
+		$.ajax({
+			method:'get',
+			url:'http://localhost:8989/getlogin',
+			success:function(result){
+				console.log(result);
+				if (result.Code == "200"){
+					location.href = "http://localhost:8989/product?username="+result.username;
+				}
+			}
+		});
+		//登录
+		$('#login').on('click',function(){
+			var username = $('#username').val();
+			var password = $('#password').val();
+			var data = {"username": username,"password": password};
+			//采用Post方法
+			$.ajax({
+				method:'post',
+				url:'http://localhost:8989/login',
+				data:data,
+				success:function(res){
+					console.log(res);
+					if (res.Code != 200){
+						alert(res.msg);
+					} else {
+						location.href = "http://localhost:8989/product?username="+username;
+					}
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		});
+		//修改资料
+		$('#upddoc').on('click',function(){
+			var username = $('#username').val();
+			location.href="http://localhost:8088/updateuser?username="+username;
+		});
+		//注销登录
+		$('#remove').on('click',function(){
+			var username = $('#username').val();
+			var password = $('#password').val();
+			var data = {"username": username,"password": password};
+			//采用get方法
+			$.ajax({
+				method:'get',
+				url:'http://localhost:8088/remove',
+				data:data,
+				success:function(res){
+					console.log(res);
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		});
+	})
+</script>
